@@ -1,94 +1,76 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client"
+
+import React, { useState } from "react";
+import ProductCard from "./components/ProductCard";
+import Grid from "./components/Grid/Grid";
+import GridItem from "./components/GridItem/GridItem";
+import Cart from "./components/Cart/Cart";
+import { useRouter } from 'next/navigation';
+import Button from "./elements/Button";
+
 
 export default function Home() {
+  const [cart, setCart] = useState([]);
+  const router = useRouter();
+
+  const products = [
+    {
+      id: 1,
+      title: 'Shoes',
+      description: 'Just some shoes, duh (?)',
+      price: 190,
+      image: '/assets/shoes.jpg'
+    },
+    {
+      id: 2,
+      title: 'T-shirt',
+      description: 'Just a t-shirt, duh (?)',
+      price: 110,
+      image: '/assets/shirt.webp'
+    },
+    {
+      id: 3,
+      title: 'Scarf',
+      description: 'Just a scarf, duh (?)',
+      price: 400,
+      image: '/assets/scarf.webp'
+    }
+  ];
+
+  const onAddToCart = (product) => {
+    setCart((prev) => [...prev, product])
+  }
+
+  const handleGoToCheckout = () => {
+    router.push(`/checkout?products=` + JSON.stringify(cart));
+  }
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+    <main className='webshop flex flex-column justify-center gap-xxl'>
+      <h1 style={{textAlign: 'center'}}>My webshop</h1>
+      <div className="wrapper contained flex flex-column gap-xxl justify-center align-center">
+        <Grid columns={3} gap={'m'}>
+          {products && products.map((p) => {
+            return (
+              <GridItem key={p.id}>
+                <ProductCard
+                  id={p.id}
+                  onAddToCart={() => onAddToCart(p)}
+                  title={p.title}
+                  description={p.description}
+                  price={p.price}
+                  image={p.image} 
+                />
+              </GridItem>
+            )
+          })}
+        </Grid>
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+        <Cart products={cart} />
+        
+        {cart.length > 0 && (
+          <Button label={'To checkout'} className={'primary'} onClick={handleGoToCheckout}/>
+        )}
       </div>
     </main>
   );

@@ -2,6 +2,7 @@
   "name": "stripe-webshop",
   "version": "0.1.0",
   "private": true,
+  "proxy": "<http://localhost:4242>",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,9 +10,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@stripe/react-stripe-js": "^2.7.1",
+    "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.2.3"
+    "sass": "^1.77.2"
   },
   "devDependencies": {
     "eslint": "^8",
